@@ -7,8 +7,20 @@ namespace topit
   struct Vector{
     ~Vector();
     Vector();
+    Vector(const Vecttor&);
+    Vector(Vector&&);
+    Vector& operator=(const Vector&);
+    Vector& operator=(Vector&&);
 
-    bool isEmpty() const noexcept;
+
+    bool isEmpty() const noexcept;//дз реализоввать + тесты
+    size_t getSize() const noexcept;//дз реализоввать + тесты
+    size_t getCapacity() const noexcept;//дз реализоввать + тесты
+
+    void pushback(const T& v);//дз реализоввать + тесты
+    void popback();//дз реализоввать + тесты
+    void insert(size_t i, const T& v);
+    void erase(size_t i);
 
     private:
       T* data_;
@@ -16,6 +28,9 @@ namespace topit
   };
 }
 
+template< class T>
+void topit::Vector<T>::pushback(const T& v)
+{}
 
 template< class T >
 topit::Vector< T > :: Vector():
