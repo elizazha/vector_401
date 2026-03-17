@@ -16,9 +16,6 @@ namespace topit
   };
 }
 
-template < class T >
-topit::Vector< T >::~Vector()
-{}
 
 template< class T >
 topit::Vector< T > :: Vector():
@@ -30,13 +27,13 @@ topit::Vector< T > :: Vector():
 template< class T >
 topit::Vector< T >::~Vector()
 {
-
+  delete [] data_;
 }
 
 template< class T >
 bool topit::Vector<T>::isEmpty() const noexcept
 {
-  return false;
+  return !size_;
 }
 
 #endif
