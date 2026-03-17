@@ -8,6 +8,8 @@ namespace topit
     ~Vector();
     Vector();
 
+    bool isEmpty() const noexcept;
+
     private:
       T* data_;
       size_t size_, capacity_;
@@ -20,10 +22,21 @@ topit::Vector< T >::~Vector()
 
 template< class T >
 topit::Vector< T > :: Vector():
-  data_(),
-  size_(),
-  capacity_()
+  data_(nullptr),
+  size_(0),
+  capacity_(0)
 {}
 
+template< class T >
+topit::Vector< T >::~Vector()
+{
+
+}
+
+template< class T >
+bool topit::Vector<T>::isEmpty() const noexcept
+{
+  return false;
+}
 
 #endif
