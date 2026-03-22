@@ -27,9 +27,6 @@ namespace topit
   };
 }
 
-template< class T>
-void topit::Vector<T>::pushback(const T& v)
-{}
 
 template< class T >
 topit::Vector< T > :: Vector():
@@ -95,7 +92,7 @@ void topit::Vector<T>::popback()
 {
   if(size_ == 0)
   {
-    throw std::out_of_range("size is zero; no data")
+    throw std::out_of_range("size is zero; no data");
   }
   size_--;
 }
