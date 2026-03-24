@@ -43,6 +43,22 @@ bool topit::operator==(const Vector<T>& lhs, const Vector<T>& rhs)
   return res;
 }
 
+template< class T >
+topit::Vector<T>::Vector(const Vector<T>& rhs):
+  data_(rhs.getSize() ? new T[rhs.getSize()] : nullptr),
+  size_(rhs.getSize()),
+  capacity_(rhs.getSize())
+{
+  for (size_t i = 0; i < rhs.getSize(); ++i)
+  {
+    try{
+      data_[i] = rhs[i];
+    }catch(..){
+      delete[] data_;
+      throw;
+    }
+  }
+}
 
 template< class T >
 T& topit::Vector< T >::operator[](size_t id) noexcept
@@ -50,7 +66,7 @@ T& topit::Vector< T >::operator[](size_t id) noexcept
   //return data_[id];
   const Vector< T >* cthis = this;
   //return cthis -> operator[](id);
-  return const_cast< T >((*cthis)[id]);
+  return const_cast< T& >((*cthis)[id]);
 }
 
 template< class T >

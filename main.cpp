@@ -2,7 +2,14 @@
 #include <iomanip>
 #include "top_it_vector.hpp"
 
-bool testCopyConstructor()
+bool testCopyConstructorForEmpty()
+{
+  topit::Vector< int > v;
+  v.pushback(1);
+  topit::Vector< int > yav = v;
+  return v ==yav;
+}
+bool testCopyConstructorForNonEmpty()
 {
   topit::Vector< int > v;
   topit::Vector< int > yav = v;
@@ -160,7 +167,9 @@ int main()
         {"test inbound acsses", testElementsAccess},
         {"test out of bound access", testElementsOutOfBoundAccess}, 
         {"test inbound const acsses", testElementsConstAccess},
-        {"test out of bound const access", testElementsOutOfBoundConstAccess}
+        {"test out of bound const access", testElementsOutOfBoundConstAccess},
+        {"test copy for empty vector", testCopyConstructorForEmpty},
+        {"test copy for non empty vector", testCopyConstructorForNonEmpty}
     };
   // bool(*tests[])() = {//массик указателей ничего не принимающий восвращающий логическое
   //   testEmptyVector
