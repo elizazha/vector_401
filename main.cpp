@@ -32,6 +32,30 @@ bool testElementsOutOfBoundAccess(){
   }
 }
 
+bool testElementsConstAccess(){
+  topit::Vector< int > v;
+  v.pushback(1);
+  const topit::Vector< int >& rv = v;
+  try{
+    const int& val = rv.at(0);
+    return val == 1;
+  }catch(...){
+    return false;
+  }
+}
+
+bool testElementsOutOfBoundConstAccess(){
+  const topit::Vector< int > v; // так можно только в out, потому что он изначально пцстой, нас это устраивает
+  try{
+    v.at(0);
+    return false;
+  }catch(const std::out_of_range&){
+    return true;
+  }catch(...){
+    return false;
+  }
+}
+
 bool testSize()
 {
   topit::Vector< int > v;
@@ -127,7 +151,9 @@ int main()
         {"test changes of capacity", testCapacityMultiple},
         {"test capacity if popback's", testCapacityPopback},
         {"test inbound acsses", testElementsAccess},
-        {"test out of bound access", testElementsOutOfBoundAccess}
+        {"test out of bound access", testElementsOutOfBoundAccess}, 
+        {"test inbound const acsses", testElementsConstAccess},
+        {"test out of bound const access", testElementsOutOfBoundConstAccess}
     };
   // bool(*tests[])() = {//массик указателей ничего не принимающий восвращающий логическое
   //   testEmptyVector
