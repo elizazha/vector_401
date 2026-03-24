@@ -4,6 +4,7 @@
 
 bool testEmptyVector()
 {
+  //std::cout << __func__ << "\n"; // выводит рназвание исполняемой функции
   topit::Vector< int > v;
   return v.isEmpty();
 }
@@ -116,5 +117,7 @@ int main()
     pass = pass && res;
   }
   std::cout << "Result: " << pass << "\n";
+  //подсчет пройденных.не пройденных тестов
+  //выводить только не прошедшие тесты
   return 0;
 }
