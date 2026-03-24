@@ -38,10 +38,8 @@ template< class T >
 bool topit::operator==(const Vector<T>& lhs, const Vector<T>& rhs)
 {
   bool isEqual = lhs.getSize() == rhs.getSize();
-  for (size_t i = 0; i < lhs.getSize() && (isEqual = isEqual && [i] == rhs[i]); ++i)
-  {
+  for (size_t i = 0; (i < lhs.getSize()) && (isEqual = isEqual && [i] == rhs[i]); ++i);
     return isEqual;
-  }
   return res;
 }
 
