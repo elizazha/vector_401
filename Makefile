@@ -6,4 +6,5 @@ main: main.o
 -include main.d
 
 clean:
-	@$(RM) main.d main.o main
+	-@$(RM) main.d main.o 
+	-@$(RM) main
