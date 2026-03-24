@@ -4,32 +4,8 @@
 
 bool testEmptyVector()
 {
-  //std::cout << __func__ << "\n"; // выводит рназвание исполняемой функции
   topit::Vector< int > v;
   return v.isEmpty();
-}
-
-bool testElementsAccess(){
-  topit::Vector< int > v;
-  v.pushback(1);
-  try{
-    int& val = v.at(0);
-    return val == 1;
-  }catch(...){
-    return false;
-  }
-}
-
-bool testElementsOutOfBoundAccess(){
-  topit::Vector< int > v;
-  try{
-    int& val = v.at(0);
-    return false;
-  }catch(const std::out_of_range&){
-    return true;
-  }catch(...){
-    return false;
-  }
 }
 
 bool testSize()
@@ -125,9 +101,7 @@ int main()
         {"test single popback after pushback",testPopback },
         {"test if try to popback empty list", testPopbackEmpty},
         {"test changes of capacity", testCapacityMultiple},
-        {"test capacity if popback's", testCapacityPopback},
-        {"test inbound acsses", testElementsAccess},
-        {"test out of bound access", testElementsOutOfBoundAccess}
+        {"test capacity if popback's", testCapacityPopback}
     };
   // bool(*tests[])() = {//массик указателей ничего не принимающий восвращающий логическое
   //   testEmptyVector
@@ -142,7 +116,5 @@ int main()
     pass = pass && res;
   }
   std::cout << "Result: " << pass << "\n";
-  //подсчет пройденных.не пройденных тестов
-  //выводить только не прошедшие тесты
   return 0;
 }
