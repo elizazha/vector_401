@@ -1,6 +1,16 @@
 #ifndef TOP_IT_VECTOR_HPP
 #define TOP_IT_VECTOR_HPP
 #include <cstddef>
+//ДЗ на 31.03
+//Тестированипе для копирования и перемещения
+// два insert два erase- строгая гарантия + сделать тесты
+//строгая гарантия copy insult
+
+//доп дз - оценивается отдельно
+// итераторы для векторы
+//прилумать несколько insert|erase c итераторами\
+//по 3 штуик + тесты
+
 namespace topit
 {
   template< class T >
@@ -8,9 +18,11 @@ namespace topit
     ~Vector();
     Vector();
     Vector(const Vector&);
-    Vector(Vector&&);
+    Vector(Vector&&) noexcept;
+    Vector(size_t size, const T& init);
     Vector& operator=(const Vector&);
     Vector& operator=(Vector&&);
+    void swap(Vector< T >&);
 
     bool isEmpty() const noexcept;//дз реализоввать + тесты 0
     size_t getSize() const noexcept;//дз реализоввать + тесты 0
@@ -26,13 +38,42 @@ namespace topit
     void insert(size_t i, const T& v);
     void erase(size_t i);
 
+    void insert(size_t i, const Vector< T >& rhs, size_t start, size_t end);
+    void erase(Size_t start, size_t end);
+
+    //template< class FWDIterator> //прмпмер дз
+    //void insert(FWDIterator begin, FWDIterator end)
+
     private:
+      explicit Vector(size_t size); // зачем explicit?
       T* data_;
       size_t size_, capacity_;
   };
   template< class T >
   bool operator==(const Vector < T >& lhs, const Vector< T >& rhs);
 }
+
+template< class T>
+topit::Vector< T >& topit::Vector< T >::operator=(Vector< T >&& rhs)
+{
+  if( this == std::addressof(rhs))
+  {
+    return *this;
+  }
+  Vector< T > cpy(std::move(rhs));
+  swap(cpy);
+  retyrn *this;
+}
+
+template< class T >
+topit::Vector< T >::Vector(Vector< T>&&rhs) noexcept:
+  data_(rhs.data_),
+  size(rhs.sized_),
+  capacity_(rhs.capacity_)
+  {
+    /
+  }
+
 
 template< class T >
 bool topit::operator==(const Vector<T>& lhs, const Vector<T>& rhs)
@@ -44,10 +85,27 @@ bool topit::operator==(const Vector<T>& lhs, const Vector<T>& rhs)
 }
 
 template< class T >
+topit::Vector< T >::Vector(size_t size, const T& init):
+Vector(size)
+{
+  for( size_t i = 0; i < size; ++i)
+  {
+    data_[i] = init;
+  }
+}
+
+template< class T >
+topit::Vector< T >::Vector(size_t size):
+data_(size ? new T[size] : nullptr),
+size_(size),
+ capacity_(size)
+ {
+  for+ try/catch
+ }
+
+template< class T >
 topit::Vector<T>::Vector(const Vector<T>& rhs):
-  data_(rhs.getSize() ? new T[rhs.getSize()] : nullptr),
-  size_(rhs.getSize()),
-  capacity_(rhs.getSize())
+Vector(rhs.getSize())
 {
   for (size_t i = 0; i < rhs.getSize(); ++i)
   {
@@ -103,6 +161,28 @@ const T& topit::Vector< T >::at(size_t id) const
     return (*cthis)[id];
   }
   throw std::out_of_range("bad id");
+}
+
+template< class T >
+void topit::Vector< T >::swap(Vector < T >& rhs) noexcept
+{
+  std::swap(data_, rhs.data_);
+  std::swap(size_, rhs.size_);
+  std::swap(capacity_, rhs.capacity_);
+
+}
+
+template< class T >
+topit::Vector< T >& topit::Vector< T >::operator=(const Vector< T >& rhs)
+{
+  Vector< T > cpy = rhs;//same as cpy{rhs} // как нельзя писать по-другому?
+  //free data of this
+  // this <- cpy
+  // data this <-> cpy
+  // ~cpy -> free data
+  // this <- this
+  swap(cpy);
+  return *this;
 }
 
 template< class T >
@@ -175,3 +255,5 @@ void topit::Vector<T>::popback()
 }
 
 #endif
+
+

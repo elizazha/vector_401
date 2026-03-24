@@ -5,15 +5,19 @@
 bool testCopyConstructorForEmpty()
 {
   topit::Vector< int > v;
-  v.pushback(1);
   topit::Vector< int > yav = v;
   return v ==yav;
 }
 bool testCopyConstructorForNonEmpty()
 {
   topit::Vector< int > v;
+  v.pushback(1);
   topit::Vector< int > yav = v;
-  return v ==yav;
+  try{
+    return yav.getSize() == v.getSize() && yav.at(0) == v.at(0);
+  }catch(...){
+    return false;
+  }
 }
 
 bool testEmptyVector()
