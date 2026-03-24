@@ -2,6 +2,13 @@
 #include <iomanip>
 #include "top_it_vector.hpp"
 
+bool testCopyConstructor()
+{
+  topit::Vector< int > v;
+  topit::Vector< int > yav = v;
+  return v ==yav;
+}
+
 bool testEmptyVector()
 {
   //std::cout << __func__ << "\n"; // выводит рназвание исполняемой функции
