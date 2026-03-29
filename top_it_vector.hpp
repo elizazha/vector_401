@@ -39,7 +39,7 @@ namespace topit
     void erase(size_t i);
 
     void insert(size_t i, const Vector< T >& rhs, size_t start, size_t end);
-    void erase(Size_t start, size_t end);
+    void erase(size_t start, size_t end);
 
     //template< class FWDIterator> //прмпмер дз
     //void insert(FWDIterator begin, FWDIterator end)
@@ -53,6 +53,106 @@ namespace topit
   bool operator==(const Vector < T >& lhs, const Vector< T >& rhs);
 }
 
+template< class T >
+void  topit::Vector<T>::erase(size_t i)
+{
+  if (i >= size_)
+  {
+    throw std::out_of_range("index of delete more then size");
+  }
+  for (size_t j = i; j < size_ - 1; j++)
+  {
+    data_[j] = data_[j + 1];
+  }
+  size_--;
+}
+
+template< class T >
+void  topit::Vector<T>::erase(size_t start, size_t end)
+{
+  if ( start > end || end > size_)
+  {
+    throw std::out_of_range("start mor thyan end OR end more than size");
+  }
+  size_t count = end - start;
+  for (size_t i = start; i + count < size_; i++)
+  {
+    data_[i] = data[i + count];
+  }
+  size_ -= count;
+}
+
+template< class T >
+void  topit::Vector<T>::insert(size_t i, const T& v)
+{
+  if (i > size_)
+  {
+    throw std::out_of_range("index more than size");
+  }
+  size_t newSize = size_ + 1;
+  size_t newCap = (newSize > capacity_) ? (capacity_ == 0 ? 1 : capacity_ * 2) : capacity_;
+  T* newData = new T[newCap];
+  try
+  {
+    for (size_t j; j < i; j++)
+    {
+      newData[j] = data_[j];
+    }
+    newData[i] = v;
+    for (size_t j = i; j < size_; j++)
+    {
+      newData[j + 1 ] = data_[j];
+    }
+  }catch(...)
+  {
+    delete[] newData;
+    throw;
+  }
+  delete[] data_;
+  data_ = newData;
+  size_ = newSize;
+  capacity_ = newCap;
+}
+
+template< class T >
+void  topit::Vector<T>::insert(size_t i, const Vector< T >& rhs, size_t start, size_t end)
+{
+  if (start > end || end > rhs.size_ || i > rhs.size_)
+  {
+    throw std::out_of_range("index/end more than size or start > end");
+  }
+  size_t count = end - start;
+  size_t newSize = size_ + count;
+  size_t newCap = (newSize > capacity_) ? newSize : capacity_;
+  T* newData = new T[newCap];
+  try
+  {
+    for (size_t j = 0; j < i; j++)
+    {
+      newData[j] = data_[j];
+    }
+    for (size_t k = start; k < end; k++, j++)
+    {
+      newData[j] = rhs[k];
+    }
+    for (size_t k = i; k < size_; k++, j++)
+    {
+      newData[j] = data_[k];
+    }
+  }catch(...)
+  {
+    delete[] newData;
+    throw;
+  }
+  delete[] data_;
+  data_ = newData;
+  size_ = newSize;
+  capacity_ = newCap;  
+}
+
+
+
+
 template< class T>
 topit::Vector< T >& topit::Vector< T >::operator=(Vector< T >&& rhs)
 {
@@ -62,31 +162,31 @@ topit::Vector< T >& topit::Vector< T >::operator=(Vector< T >&& rhs)
   }
   Vector< T > cpy(std::move(rhs));
   swap(cpy);
-  retyrn *this;
+  return *this;
 }
 
 template< class T >
-topit::Vector< T >::Vector(Vector< T>&&rhs) noexcept:
+topit::Vector< T >::Vector(Vector< T>&& rhs) noexcept:
   data_(rhs.data_),
-  size(rhs.sized_),
+  size_(rhs.size_),
   capacity_(rhs.capacity_)
   {
-    /
+    rhs.data_ = nullptr;
+    rhs.size_ = 0;
+    rhs.capacity_ = 0;
   }
-
 
 template< class T >
 bool topit::operator==(const Vector<T>& lhs, const Vector<T>& rhs)
 {
   bool isEqual = lhs.getSize() == rhs.getSize();
-  for (size_t i = 0; (i < lhs.getSize()) && (isEqual = isEqual && [i] == rhs[i]); ++i);
+  for (size_t i = 0; (i < lhs.getSize()) && (isEqual = isEqual && (lhs[i] == rhs[i])); ++i);
     return isEqual;
-  return res;
+  return isEqual;
 }
 
 template< class T >
-topit::Vector< T >::Vector(size_t size, const T& init):
-Vector(size)
+topit::Vector< T >::Vector(size_t size, const T& init): Vector(size)
 {
   for( size_t i = 0; i < size; ++i)
   {
@@ -104,13 +204,12 @@ size_(size),
  }
 
 template< class T >
-topit::Vector<T>::Vector(const Vector<T>& rhs):
-Vector(rhs.getSize())
+topit::Vector<T>::Vector(const Vector<T>& rhs): Vector(rhs.getSize())
 {
-  for (size_t i = 0; i < rhs.getSize(); ++i)
+  for (size_t i = 0; i < rhs.size_; ++i)
   {
     try{
-      data_[i] = rhs[i];
+      data_[i] = rhs.data_[i];
     }catch(..){
       delete[] data_;
       throw;
@@ -122,7 +221,7 @@ template< class T >
 T& topit::Vector< T >::operator[](size_t id) noexcept
 {
   //return data_[id];
-  const Vector< T >* cthis = this;
+  const Vector* cthis = this;
   //return cthis -> operator[](id);
   return const_cast< T& >((*cthis)[id]);
 }
@@ -158,7 +257,7 @@ const T& topit::Vector< T >::at(size_t id) const
     //return data_[id];
 
     //return this->operator[](id);
-    return (*cthis)[id];
+    return (*this)[id];
   }
   throw std::out_of_range("bad id");
 }
@@ -173,8 +272,11 @@ void topit::Vector< T >::swap(Vector < T >& rhs) noexcept
 }
 
 template< class T >
-topit::Vector< T >& topit::Vector< T >::operator=(const Vector< T >& rhs)
+topit::Vector< T >& topit::Vector< T >::operator=(const Vector& rhs)
 {
+  if (this == std::addressof(rhs)) {
+    return *this;
+  }
   Vector< T > cpy = rhs;//same as cpy{rhs} // как нельзя писать по-другому?
   //free data of this
   // this <- cpy
@@ -201,7 +303,7 @@ topit::Vector< T >::~Vector()
 template< class T >
 bool topit::Vector<T>::isEmpty() const noexcept
 {
-  return !size_;
+  return !size_ or !data_;
 }
 
 template< class T >
@@ -251,7 +353,9 @@ void topit::Vector<T>::popback()
   {
     throw std::out_of_range("size is zero; no data");
   }
-  size_--;
+  if (size_ > 0) {
+    size_--;
+  }
 }
 
 #endif
