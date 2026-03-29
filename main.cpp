@@ -154,6 +154,68 @@ bool testCapacityPopback()
 
 }
 
+bool testEraseOne()
+{
+  topit::Vector< int > v;
+  v.pushback(1);
+  v.pushback(2);
+  v.pushback(3);
+  v.erase(1);
+  return (v.getSize() == 2 && (v[0] == 1 && v[1] == 3));
+}
+
+bool testEraseStart()
+{
+  topit::Vector< int > v;
+  v.pushback(1);
+  v.pushback(2);
+  v.erase(0);
+  return (v.getSize() == 1 && v[0] == 2);
+}
+
+bool testEraseFromTo()
+{
+  topit::Vector< int > v;
+  v.pushback(1);
+  v.pushback(2);
+  v.pushback(3);
+  v.pushback(4);
+  v.erase(1, 3);
+  return (v.getSize() == 2 && (v[0] == 1 && v[1] == 4));
+
+}
+
+bool testInsertSingle()
+{
+  topit::Vector< int > v;
+  v.pushback(1);
+  v.pushback(3);
+  v.insert(1, 2);
+  return(v.getSize() == 3 && v[0] == 1 && v[1] == 2 && v[2] == 3);
+}
+
+bool testInsertStart()
+{
+  topit::Vector< int > v;
+  v.pushback(2);
+  v.pushback(3);
+  v.insert(0, 1);
+  return (v[0] == 1 && v[1] == 2);
+
+}
+
+bool testInsertFromTo()
+{
+  topit::Vector< int > v;
+  v.pushback(1);
+  v.pushback(4);
+  topit::Vector< int > rhs;
+  rhs.pushback(2);
+  rhs.pushback(3);
+  v.insert(1, rhs, 0, 2);
+  return (v.getSize() == 4 && v[0] == 1 && v[1] == 2 && v[2] == 3 && v[3] == 4);
+}
+
 
 int main()
 {
@@ -173,7 +235,13 @@ int main()
         {"test inbound const acsses", testElementsConstAccess},
         {"test out of bound const access", testElementsOutOfBoundConstAccess},
         {"test copy for empty vector", testCopyConstructorForEmpty},
-        {"test copy for non empty vector", testCopyConstructorForNonEmpty}
+        {"test copy for non empty vector", testCopyConstructorForNonEmpty},
+        {"test single erase", testEraseOne},
+        {"test erase begining", testEraseStart},
+        {"test erase range", testEraseFromTo},
+        {"test insert single", testInsertSingle},
+        {"test insert begining", testInsertStart},
+        {"test insert range", testInsertFromTo}
     };
   // bool(*tests[])() = {//массик указателей ничего не принимающий восвращающий логическое
   //   testEmptyVector
