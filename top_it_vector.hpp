@@ -1,6 +1,7 @@
 #ifndef TOP_IT_VECTOR_HPP
 #define TOP_IT_VECTOR_HPP
 #include <cstddef>
+#include <initializer_list>
 //ДЗ на 31.03
 //Тестированипе для копирования и перемещения
 // два insert два erase- строгая гарантия + сделать тесты
@@ -8,7 +9,7 @@
 
 //доп дз - оценивается отдельно
 // итераторы для векторы
-//прилумать несколько insert|erase c итераторами\
+//прилумать несколько insert|erase c итераторами
 //по 3 штуик + тесты
 
 namespace topit
@@ -19,7 +20,8 @@ namespace topit
     Vector();
     Vector(const Vector&);
     Vector(Vector&&) noexcept;
-    Vector(size_t size, const T& init);
+    explicit Vector(std::initializer_list< T > il);
+    explicit Vector(size_t size, const T& init);
     Vector& operator=(const Vector&);
     Vector& operator=(Vector&&);
     void swap(Vector< T >&);
@@ -77,7 +79,7 @@ void  topit::Vector<T>::erase(size_t start, size_t end)
   size_t count = end - start;
   for (size_t i = start; i + count < size_; i++)
   {
-    data_[i] = data[i + count];
+    data_[i] = data_[i + count];
   }
   size_ -= count;
 }
@@ -127,9 +129,11 @@ void  topit::Vector<T>::insert(size_t i, const Vector< T >& rhs, size_t start, s
   T* newData = new T[newCap];
   try
   {
-    for (size_t j = 0; j < i; j++)
+    size_t j = 0;
+    for (size_t j1 = 0; j1 < i; j1++)
     {
-      newData[j] = data_[j];
+      newData[j1] = data_[j1];
+      j = j1;
     }
     for (size_t k = start; k < end; k++, j++)
     {
@@ -149,8 +153,6 @@ void  topit::Vector<T>::insert(size_t i, const Vector< T >& rhs, size_t start, s
   size_ = newSize;
   capacity_ = newCap;  
 }
-
-
 
 
 template< class T>
@@ -200,7 +202,6 @@ data_(size ? new T[size] : nullptr),
 size_(size),
  capacity_(size)
  {
-  for+ try/catch
  }
 
 template< class T >
@@ -210,7 +211,7 @@ topit::Vector<T>::Vector(const Vector<T>& rhs): Vector(rhs.getSize())
   {
     try{
       data_[i] = rhs.data_[i];
-    }catch(..){
+    }catch(...){
       delete[] data_;
       throw;
     }
@@ -357,6 +358,20 @@ void topit::Vector<T>::popback()
     size_--;
   }
 }
+
+
+template< class T >
+topit::Vector< T >::Vector(std::initializer_list< T > il):
+  Vector(il.size())
+{
+  size_t i = 0;
+  for( auto it = il.begin(); it != il.end(); ++it)
+  {
+    data_[i++] = *it;
+  }
+}
+
+
 
 #endif
 

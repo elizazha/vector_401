@@ -6,8 +6,9 @@ bool testCopyConstructorForEmpty()
 {
   topit::Vector< int > v;
   topit::Vector< int > yav = v;
-  return v ==yav;
+  return v == yav;
 }
+
 bool testCopyConstructorForNonEmpty()
 {
   topit::Vector< int > v;
@@ -18,6 +19,15 @@ bool testCopyConstructorForNonEmpty()
   }catch(...){
     return false;
   }
+}
+
+bool testMoveConstructro()
+{
+  topit::Vector< int > v;
+  v.pushback(1);
+  v.pushback(2);
+  topit::Vector< int > moved = std::move(v);
+  return moved.getSize() == 2 && moved[0] == 1;
 }
 
 bool testEmptyVector()
@@ -216,6 +226,11 @@ bool testInsertFromTo()
   return (v.getSize() == 4 && v[0] == 1 && v[1] == 2 && v[2] == 3 && v[3] == 4);
 }
 
+bool testInitializerList()
+{
+  topit::Vector< int > v{1, 2};
+  return v.getSize() == 2 && (v[0] == 1) && (v[1] == 2);
+}
 
 int main()
 {
@@ -241,7 +256,10 @@ int main()
         {"test erase range", testEraseFromTo},
         {"test insert single", testInsertSingle},
         {"test insert begining", testInsertStart},
-        {"test insert range", testInsertFromTo}
+        {"test insert range", testInsertFromTo},
+        {"test move constructor",testMoveConstructro},
+        {"test non-empty vector for"
+          "non-empty Initializer List",testInitializerList}
     };
   // bool(*tests[])() = {//массик указателей ничего не принимающий восвращающий логическое
   //   testEmptyVector
