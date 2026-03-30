@@ -16,12 +16,13 @@ namespace topit
 {
   template< class T >
   struct Vector{
+    //explicit Либо только там, где initializer_list, либо на все пользовательские конструкторы
     ~Vector();
     Vector();
     Vector(const Vector&);
     Vector(Vector&&) noexcept;
     explicit Vector(std::initializer_list< T > il);
-    explicit Vector(size_t size, const T& init);
+    Vector(size_t size, const T& init);
     Vector& operator=(const Vector&);
     Vector& operator=(Vector&&);
     void swap(Vector< T >&);
@@ -34,7 +35,11 @@ namespace topit
     const T& operator[](size_t id) const noexcept;
     T& at(size_t id);
     const T& at(size_t id) const;
-
+    
+    void unsafePushback(const T&);
+    template< class IT>
+    void pushbackRange(IT b, IT e);
+    void pushbackCount(size_t k, const T& val);
     void pushback(const T& v);//дз реализоввать + тесты
     void popback();//дз реализоввать + тесты
     void insert(size_t i, const T& v);
@@ -346,6 +351,32 @@ void topit::Vector<T>::pushback(const T& v)
   data_[size_] = v;
   size_++;
 }
+
+template< class T>
+template< class IT>
+void topit::Vector< T >::pushbackRange(IT b, IT e)
+{
+  size_t c = 0;
+  for ( size_t it = b; it != e; ++it, ++c);
+  //size_t c = std::distance(b, e);
+}
+template< class T>
+void topit::Vector< T >::pushbackCount(size_t k, const T& val)
+{
+  for( size_t i = 0; i < k; ++i)
+  {
+    pushback(val);
+  }
+  //если памяти не хватает на k
+  //- делаем так, чтобы хватало k
+  // добавляем в конец*
+}
+
+ template< class T>
+ void topit::Vector< T >::unsafePushback(const T&)
+ {
+  assert(size_ < capacity_); // assert - проверяет. если эта штука не true, то выводит ошибку(похоже на BOOST тесты)
+ }
 
 template<class T>
 void topit::Vector<T>::popback()
