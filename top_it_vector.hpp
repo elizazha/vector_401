@@ -12,6 +12,11 @@
 //прилумать несколько insert|erase c итераторами
 //по 3 штуик + тесты
 
+
+//дз(класная)
+//сделать reserve, shrinkToFit, unsafePushback, pushbackRange, pushbackCount
+//+ дз: исправить код, избавиться от требования тогго, чтобы тип Т конструировался по умолчанию
+//
 namespace topit
 {
   template< class T >
@@ -21,8 +26,8 @@ namespace topit
     Vector();
     Vector(const Vector&);
     Vector(Vector&&) noexcept;
-    explicit Vector(std::initializer_list< T > il);
     Vector(size_t size, const T& init);
+    explicit Vector(std::initializer_list< T > il);
     Vector& operator=(const Vector&);
     Vector& operator=(Vector&&);
     void swap(Vector< T >&);
@@ -31,15 +36,20 @@ namespace topit
     size_t getSize() const noexcept;//дз реализоввать + тесты 0
     size_t getCapacity() const noexcept;//дз реализоввать + тесты 0
 
+    //классная работа 30.03.26
+    void reserve(size_t k);//убедиться, что хватает памяти на k элементов; size_t required; size_t delta - можем передавать разное
+    void shrinkToFit();//сделать так, чтобы кол-во эл-тов вектора соответствовало емкости; уменькаем капасити
+    template< class IT>
+    void pushbackRange(IT b, IT e);
+    void pushbackCount(size_t k, const T& val);
+
+
     T& operator[](size_t id) noexcept;
     const T& operator[](size_t id) const noexcept;
     T& at(size_t id);
     const T& at(size_t id) const;
     
-    void unsafePushback(const T&);
-    template< class IT>
-    void pushbackRange(IT b, IT e);
-    void pushbackCount(size_t k, const T& val);
+    
     void pushback(const T& v);//дз реализоввать + тесты
     void popback();//дз реализоввать + тесты
     void insert(size_t i, const T& v);
@@ -52,6 +62,7 @@ namespace topit
     //void insert(FWDIterator begin, FWDIterator end)
 
     private:
+      void unsafePushback(const T&);
       explicit Vector(size_t size); // зачем explicit?
       T* data_;
       size_t size_, capacity_;
@@ -359,6 +370,9 @@ void topit::Vector< T >::pushbackRange(IT b, IT e)
   size_t c = 0;
   for ( size_t it = b; it != e; ++it, ++c);
   //size_t c = std::distance(b, e);
+  // лучше писать pushbackRange(IT b, size_t e) потому что итераторы бывают разного достпуа и зачем нам считаь если польз может сам даьб данные
+  //ч/з итераторы это долго, муторно и зря сделанная работа
+  //мы не знаем какие итераторы у пользователля, поэтому более эффективно, если польз сам даст ук. на начало и размер
 }
 template< class T>
 void topit::Vector< T >::pushbackCount(size_t k, const T& val)
